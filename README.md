@@ -145,7 +145,7 @@ ChatLert/
 
 ## 🌐 ลิงก์ที่เกี่ยวข้อง (Links)
 * 📺 **YouTube Demo Video:** [https://youtu.be/o5qS3uqPeE4](https://youtu.be/o5qS3uqPeE4)
-* 🌍 **Public Web URL:** [ChatLert Streamlit App](https://similanna-chatlert.streamlit.app/))
+* 🌍 **Public Web URL:** [ChatLert Streamlit App](https://similanna-chatlert.streamlit.app/)
 
 ---
 
