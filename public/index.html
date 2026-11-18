@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>ChatLertช่วยแปลแชทลูกค้า</title>
+<link rel="icon" href="assets/logo.png">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+Thai:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#fbf8ff;--ink:#2a1245;--p:#6a1b9a;--p2:#ab47bc;--soft:#f3e5f5;--mid:#e1bee7;--mute:#7b6a8f}
+*{box-sizing:border-box;margin:0}
+html,body{height:100%}
+body{font:15px/1.6 "Noto Sans Thai",system-ui,sans-serif;color:var(--ink);background:var(--bg) radial-gradient(var(--mid) 1px,transparent 1.2px) 0 0/22px 22px;display:flex;flex-direction:column}
+header{display:flex;align-items:center;gap:12px;padding:12px 20px;border-bottom:2px solid var(--ink);background:var(--bg)}
+header img{width:40px;height:40px;border:2px solid var(--ink);border-radius:50%;background:#fff;object-fit:cover}
+header h1{font-size:18px;font-weight:700;line-height:1.2}header small{color:var(--mute);font-size:12px;display:block}
+.on{display:inline-block;width:8px;height:8px;border-radius:50%;background:#2fb36b;margin-right:5px}
+.sp{flex:1}
+.tool{border:2px solid var(--ink);background:#fff;color:var(--ink);border-radius:8px;padding:4px 12px;font:inherit;font-size:13px;cursor:pointer;box-shadow:2px 2px 0 var(--ink)}
+.tool:active{transform:translate(2px,2px);box-shadow:none}
+#feed{flex:1;overflow-y:auto;padding:22px 16px;display:flex;flex-direction:column;gap:20px}
+.w{width:100%;max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:20px}
+.row{display:flex;gap:10px;align-items:flex-start;animation:in .25s ease-out}
+.row.u{justify-content:flex-end}
+@keyframes in{from{opacity:0;transform:translateY(8px)}}
+.av{display:block;overflow:hidden;width:36px;height:36px;border:2px solid var(--ink);border-radius:50%;background:#fff;object-fit:cover;flex:none}
+.name{font-size:12px;color:var(--mute);margin-bottom:4px}
+.raw{max-width:80%;background:#fff;border:2px dashed var(--ink);border-radius:4px 14px 14px 14px;padding:10px 14px;transform:rotate(.6deg);font-size:16px}
+.raw small{display:block;font-size:11px;color:var(--mute);letter-spacing:.06em;text-transform:uppercase}
+.say{background:var(--soft);border:2px solid var(--ink);border-radius:14px 14px 14px 4px;padding:10px 14px;box-shadow:4px 4px 0 var(--ink)}
+.chips{display:flex;flex-wrap:wrap;gap:8px;margin-top:10px}
+.chip{border:2px solid var(--ink);background:#fff;border-radius:999px;padding:3px 12px;font:inherit;font-size:13.5px;cursor:pointer;color:var(--ink)}
+.chip:hover{background:var(--p2);color:#fff}
+.tk{flex:1;min-width:0;max-width:600px}
+.ticket{background:var(--soft);border:2px solid var(--ink);border-radius:14px;box-shadow:5px 5px 0 var(--p);position:relative}
+.top{display:flex;justify-content:space-between;align-items:center;padding:8px 14px 0;font-size:12px;color:var(--mute)}
+.stamp{border:2px solid var(--p);color:var(--p);border-radius:6px;padding:0 8px;font-weight:700;font-size:12px;transform:rotate(-2deg);background:#fff}
+.out{font-size:21px;font-weight:700;line-height:1.5;padding:8px 14px 12px;color:#4a148c}
+.cut{border-top:2px dashed var(--ink);margin:0 12px;position:relative}
+.cut::before,.cut::after{content:"";position:absolute;top:-11px;width:20px;height:20px;border-radius:50%;background:var(--bg);border:2px solid var(--ink)}
+.cut::before{left:-24px}.cut::after{right:-24px}
+.meta{padding:10px 14px;display:flex;flex-wrap:wrap;gap:6px;font-size:13px}
+.meta span{background:#fff;border:1.5px solid var(--p2);border-radius:6px;padding:0 8px}
+.meta b{color:var(--p)}
+.sug{padding:0 14px 12px}.sug p{font-size:12px;color:var(--mute)}
+.sug .chip{border-radius:10px;text-align:left;border-color:var(--p2)}
+details{padding:0 14px 12px}summary{cursor:pointer;font-size:13px;color:var(--p);font-weight:500}
+ol{list-style:none;padding:0;margin-top:8px;display:grid;gap:6px;font-size:13px}
+ol li{display:grid;grid-template-columns:22px 1fr;gap:8px}
+.n{width:22px;height:22px;border-radius:50%;background:var(--p);color:#fff;font-size:11px;display:grid;place-items:center}
+li span{color:var(--mute);font-size:12px}li code{display:block;font:inherit;background:#fff;border-radius:6px;padding:1px 8px;word-break:break-all}
+.tok{display:inline-block;border:1px solid var(--mid);border-radius:4px;padding:0 5px;margin:1px 3px 1px 0}
+.dots{display:flex;gap:5px;padding:6px 2px}.dots i{width:8px;height:8px;border-radius:50%;background:var(--p);animation:b 1s infinite}
+.dots i:nth-child(2){animation-delay:.15s}.dots i:nth-child(3){animation-delay:.3s}
+@keyframes b{50%{transform:translateY(-5px);opacity:.4}}
+footer{padding:10px 16px calc(14px + env(safe-area-inset-bottom));border-top:2px solid var(--ink);background:var(--bg)}
+form{max-width:720px;margin:auto;display:flex;gap:10px;align-items:flex-end}
+textarea{flex:1;resize:none;height:48px;max-height:120px;border:2px solid var(--ink);border-radius:12px;padding:10px 14px;font:inherit;font-size:16px;background:#fff;color:var(--ink);box-shadow:3px 3px 0 var(--ink)}
+textarea:focus{outline:0;border-color:var(--p);box-shadow:3px 3px 0 var(--p)}
+.go{height:48px;width:52px;display:grid;place-items:center;border:2px solid var(--ink);background:var(--p2);color:#fff;border-radius:12px;padding:0;font:inherit;font-weight:700;cursor:pointer;box-shadow:3px 3px 0 var(--ink)}
+.go:active{transform:translate(3px,3px);box-shadow:none}.go:disabled{opacity:.6}
+.cr{text-align:center;font-size:11px;color:var(--mute);margin-top:8px}
+@media(prefers-reduced-motion:reduce){*{animation:none!important}}
+@media(max-width:520px){.tool.hide{display:none}header small{display:none}}
+</style>
+</head>
+<body>
+<header>
+  <span class="av" id="hav" style="width:40px;height:40px"></span>
+  <div><h1>ChatLert</h1><small><i class="on"></i>พร้อมแปลแชทลูกค้าเป็นภาษาไทยมาตรฐาน</small></div>
+  <div class="sp"></div>
+  <button class="tool hide" id="exp">ส่งออก CSV</button><button class="tool" id="clr">ล้างแชท</button>
+</header>
+<main id="feed"><div class="w" id="w"></div></main>
+<footer>
+  <form id="f">
+    <textarea id="q" rows="1" maxlength="500" placeholder="วางแชทลูกค้าตรงนี้ เช่น สินค้าถึงยางงง" aria-label="ข้อความแชทลูกค้า"></textarea>
+    <button class="go" id="go" aria-label="ส่ง" title="ส่ง"><svg viewBox="0 0 24 24" width="22" height="22" fill="none" stroke="#fff" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4z"/></svg></button>
+  </form>
+  <p class="cr">โปรเจกต์วิชา NLP · ผู้จัดทำ สิมิลันนา พาล์เมียรี่ ชไวเกิร์ต</p>
+</footer>
+<script>
+const EX=["สินค้าถึงวันหนายยยค่าา","โอนแล้วน้าา เช็คให้ทีงับ","เสื้อตัวนี้ไซส์เล็กไป ขอเปลี่ยนหน่อยคระ","สินค้าถึงยางงง","สนจัยตัวนี้อยุ่ มีสีไรบ้างคะะะ"];
+const ST=["ลบอักขระพิเศษ","ลดตัวอักษรซ้ำ","ปรับคำแสลง","ตัดคำ (newmm)","ลบคำที่ไม่จำเป็น","ปรับโครงสร้างประโยค","เติมหางเสียง","จำแนกเจตนา"];
+const SUG={"สอบถามสถานะสินค้า":["ขอเลขออเดอร์หน่อยนะคะ เดี๋ยวตรวจสอบสถานะพัสดุให้ค่ะ"],
+"แจ้งชำระเงิน":["ขอบคุณค่ะ แอดมินกำลังตรวจสอบยอดโอนให้นะคะ","รบกวนส่งสลิปอีกครั้งได้ไหมคะ"],
+"ขอเปลี่ยนสินค้า":["รบกวนแจ้งเลขออเดอร์และไซส์ที่ต้องการเปลี่ยนด้วยนะคะ"],
+"สอบถามรายละเอียดสินค้า":["ลูกค้าสนใจสินค้าตัวไหนเป็นพิเศษคะ เดี๋ยวแอดมินแจ้งรายละเอียดให้ค่ะ"],
+"ข้อความทั่วไป":["รบกวนแจ้งรายละเอียดเพิ่มเติมได้ไหมคะ"]};
+const ROBOT='<svg viewBox="0 0 40 40" width="100%" height="100%"><circle cx="20" cy="20" r="20" fill="#6a1b9a"/><line x1="20" y1="6" x2="20" y2="11" stroke="#fff" stroke-width="2"/><circle cx="20" cy="5.5" r="2" fill="#e1bee7"/><rect x="9" y="11" width="22" height="18" rx="6" fill="#fff"/><circle cx="15" cy="19" r="2.6" fill="#6a1b9a"/><circle cx="25" cy="19" r="2.6" fill="#6a1b9a"/><path d="M15 24.5q5 3 10 0" stroke="#6a1b9a" stroke-width="2" fill="none" stroke-linecap="round"/><rect x="5" y="17" width="3" height="6" rx="1.5" fill="#e1bee7"/><rect x="32" y="17" width="3" height="6" rx="1.5" fill="#e1bee7"/></svg>';
+const $=i=>document.getElementById(i),W=$("w"),q=$("q"),go=$("go");let H=[];
+const E=(t,c,x)=>{const e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e};
+const down=()=>$("feed").scrollTo({top:1e9,behavior:"smooth"});
+const av=()=>{const i=E("span","av");i.innerHTML=ROBOT;return i};
+async function cp(b,t){const o=b.textContent;try{await navigator.clipboard.writeText(t);b.textContent="คัดลอกแล้ว"}catch{b.textContent="คัดลอกไม่ได้"}setTimeout(()=>b.textContent=o,1200)}
+function bot(n){const r=E("div","row"),c=E("div","tk");c.append(E("div","name","ChatLert"),n);r.append(av(),c);W.append(r);down();return r}
+
+function hello(){
+  const s=E("div","say");s.append(E("div",0,"สวัสดีค่ะ ส่งแชทลูกค้ามาได้เลย ChatLert จะแปลเป็นภาษาไทยมาตรฐาน บอกเจตนา และเตรียมคำตอบให้แอดมินด้วย"));
+  const c=E("div","chips");EX.forEach(t=>{const b=E("button","chip",t);b.type="button";b.onclick=()=>{q.value=t;send()};c.append(b)});s.append(c);bot(s)}
+
+function ticket(res){
+  const t=E("div","ticket"),top=E("div","top");
+  top.append(E("span",0,"ภาษามาตรฐาน"),E("span","stamp",res.step_5_8));
+  const o=E("div","out",res.step_5_7||"(ไม่พบข้อความที่แปลได้ ลองพิมพ์ใหม่อีกครั้ง)");
+  const m=E("div","meta"),tag=(k,v)=>{const s=E("span");s.append(E("b",0,k+" "),document.createTextNode(v));m.append(s)};
+  if(res.product!=="-"||res.attr!=="-")tag("สกัดได้",[res.product,res.attr].filter(x=>x!=="-").join(" · "));
+  tag("หางเสียง",res.has_suffix?"ปรับแล้ว":"ไม่มี");
+  const cb=E("button","chip","คัดลอกคำแปล");cb.onclick=()=>cp(cb,res.step_5_7);m.append(cb);
+  const sg=E("div","sug");sg.append(E("p",0,"ตัวอย่างคำตอบ (คลิกเพื่อคัดลอก)"));
+  const sc=E("div","chips");(SUG[res.step_5_8]||SUG["ข้อความทั่วไป"]).forEach(x=>{const b=E("button","chip",x);b.onclick=()=>cp(b,x);sc.append(b)});sg.append(sc);
+  const d=E("details"),ol=E("ol");d.append(E("summary",0,"ดูว่า ChatLert คิดยังไง · 8 ขั้นตอน"),ol);
+  [res.step_5_1,res.step_5_2,res.step_5_3,res.step_5_4,res.step_5_5,res.step_5_6,res.step_5_7,res.step_5_8].forEach((v,i)=>{
+    const li=E("li"),b=E("div");b.append(E("span",0,ST[i]));const c=E("code");
+    if(Array.isArray(v))v.forEach(x=>c.append(E("span","tok",x)));else c.textContent=v||"-";
+    b.append(c);li.append(E("div","n",i+1),b);ol.append(li)});
+  t.append(top,o,E("div","cut"),m,sg,d);return t}
+
+async function send(){
+  const text=q.value.trim();if(!text||go.disabled)return;
+  q.value="";q.style.height="48px";go.disabled=true;
+  const u=E("div","row u"),r=E("div","raw");r.append(E("small",0,"ลูกค้าพิมพ์มา"),document.createTextNode(text));u.append(r);W.append(u);
+  const dots=E("div","say"),dd=E("div","dots");dd.innerHTML="<i></i><i></i><i></i>";dots.append(dd);const tp=bot(dots);
+  try{
+    const x=await fetch("/api/process",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({text})});
+    if(!x.ok)throw 0;const res=await x.json();H.push({text,res});
+    await new Promise(k=>setTimeout(k,300));tp.remove();const wr=E("div"),ld=E("div","say","แปลเป็นภาษาไทยมาตรฐานให้แล้วนะคะ");ld.style.marginBottom="14px";wr.append(ld,ticket(res));bot(wr);
+  }catch{tp.remove();bot(E("div","say","เซิร์ฟเวอร์สะดุด ลองส่งใหม่อีกครั้งนะคะ"))}
+  go.disabled=false;q.focus();down()}
+
+$("f").onsubmit=e=>{e.preventDefault();send()};
+q.onkeydown=e=>{if(e.key==="Enter"&&!e.shiftKey&&!e.isComposing){e.preventDefault();send()}};
+q.oninput=()=>{q.style.height="48px";q.style.height=Math.min(q.scrollHeight,120)+"px"};
+$("clr").onclick=()=>{H=[];W.replaceChildren();hello()};
+$("exp").onclick=()=>{if(!H.length)return;const c=x=>'"'+String(x).replace(/"/g,'""')+'"';
+const csv="\ufefftext,standard,intent\n"+H.map(h=>[h.text,h.res.step_5_7,h.res.step_5_8].map(c).join(",")).join("\n");
+const a=E("a");a.href=URL.createObjectURL(new Blob([csv],{type:"text/csv"}));a.download="chatlert-history.csv";a.click()};
+$("hav").innerHTML=ROBOT;hello();
+</script>
+</body>
+</html>
