@@ -1,5 +1,4 @@
 {
-  "framework": null,
   "outputDirectory": "public",
   "functions": { "api/process.py": { "maxDuration": 30 } }
 }

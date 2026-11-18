@@ -3,7 +3,14 @@
 เว็บแชทบอทแปลงภาษาแชทลูกค้าเป็นภาษาไทยมาตรฐานด้วย NLP (PyThaiNLP) · โปรเจกต์วิชา NLP
 
 - `public/` หน้าเว็บ (HTML/CSS/JS ล้วน)
-- `api/process.py` Vercel Python Function
-- `api/engine.py` NLP pipeline 8 ขั้นตอน
+- `api/process.py` Vercel Python Function (`GET` เช็กสถานะ, `POST {"text": ...}` แปลข้อความ)
+- `api/engine.py` NLP pipeline 8 ขั้นตอน (v2.0)
+- `tests/test_engine.py` ชุดทดสอบถดถอย รันด้วย `python tests/test_engine.py`
+
+## v2.0 เปลี่ยนอะไร
+- แก้บั๊กตัดหางเสียงที่ทำให้ตัวอักษรหาย (เช่น "เท่าไหร่" → "เท่าไห")
+- ลดตัวอักษรซ้ำโดยไม่ทำลายคำปกติ เช่น "ออเดอร์"
+- จำแนกเจตนาเพิ่ม: ร้องเรียนการจัดส่ง, สินค้ามีปัญหา, ยกเลิกคำสั่งซื้อ, สอบถามการจัดส่ง/ชำระเงิน, ทักทาย, ขอบคุณ
+- ตรวจหางเสียงที่ท้ายคำ ไม่นับ "ขา" ใน "ขาย" หรือ "คับ" (แน่น) กลางประโยค
 
 Deploy: Import repo นี้ที่ https://vercel.com/new แล้วกด Deploy
