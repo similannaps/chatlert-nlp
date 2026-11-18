@@ -1,12 +1,20 @@
 import json
+import os
+import traceback
 from http.server import BaseHTTPRequestHandler
 
-try:
-    from .engine import ChatLertEngine
-except ImportError:
-    from engine import ChatLertEngine
+# Vercel เขียนไฟล์ได้เฉพาะ /tmp
+os.environ.setdefault("PYTHAINLP_DATA", "/tmp/pythainlp-data")
 
-engine = ChatLertEngine()
+engine, LOAD_ERROR = None, None
+try:
+    try:
+        from .engine import ChatLertEngine
+    except ImportError:
+        from engine import ChatLertEngine
+    engine = ChatLertEngine()
+except Exception:
+    LOAD_ERROR = traceback.format_exc()
 
 
 class handler(BaseHTTPRequestHandler):
@@ -20,10 +28,13 @@ class handler(BaseHTTPRequestHandler):
         self.wfile.write(data)
 
     def do_GET(self):
-        # เปิด /api/process ในเบราว์เซอร์เพื่อเช็กว่า API ทำงานอยู่
+        if LOAD_ERROR:
+            return self._send(500, {"ok": False, "load_error": LOAD_ERROR})
         self._send(200, {"ok": True, "service": "chatlert"})
 
     def do_POST(self):
+        if LOAD_ERROR:
+            return self._send(500, {"error": "engine failed to load"})
         try:
             n = int(self.headers.get("Content-Length") or 0)
             body = json.loads(self.rfile.read(n) or b"{}")
