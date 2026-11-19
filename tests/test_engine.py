@@ -1,5 +1,5 @@
 """รัน: python tests/test_engine.py  (ต้องติดตั้ง pythainlp ก่อน)"""
-import os, sys
+import json, os, sys
 sys.path.insert(0, os.path.join(os.path.dirname(__file__), "..", "api"))
 from engine import ChatLertEngine
 
@@ -35,7 +35,16 @@ CASES = [  # (ข้อความลูกค้า, ผลที่ควร�
  ("มีขายไหม", "มีขายไหม", "ข้อความทั่วไป"),   # "ขา" ในคำว่า "ขาย" ต้องไม่ถูกนับเป็นหางเสียง
 ]
 
+def check_config():
+    """vercel.json ต้องมี framework: null ไม่งั้น Vercel เปิดโหมดแอป Python แล้ว build พัง (PYTHON_ENTRYPOINT_NOT_FOUND)"""
+    p = os.path.join(os.path.dirname(__file__), "..", "vercel.json")
+    cfg = json.load(open(p, encoding="utf-8"))
+    assert "framework" in cfg and cfg["framework"] is None, "vercel.json ต้องมี \"framework\": null"
+    assert cfg.get("outputDirectory") == "public", "outputDirectory ต้องเป็น public"
+
+
 if __name__ == "__main__":
+    check_config()
     e, bad = ChatLertEngine(), 0
     for w, want in [("บ้างง", "บ้าง"), ("จัดสรร", "จัดสรร"), ("ออเดอร์", "ออเดอร์")]:  # หน่วยย่อยของขั้นลดตัวซ้ำ
         assert e.reduce_repeated(w) == want, (w, e.reduce_repeated(w))
