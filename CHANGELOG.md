@@ -2,6 +2,7 @@
 
 ## v2.0.1
 - แก้ `vercel.json` ให้มี `"framework": null` อีกครั้ง (ถูกทับโดยไฟล์เก่า ทำให้ build บน Vercel พัง)
+- API ไม่แสดง traceback ให้คนทั่วไปเห็น (เก็บไว้ใน Vercel Logs)
 - เพิ่มการตรวจ `vercel.json` ในชุดทดสอบ, คืน README ฉบับเต็มพร้อมตัวอย่างที่รันจริง
 
 ## v2.0 (Vercel)

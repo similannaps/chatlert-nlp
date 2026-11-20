@@ -15,6 +15,7 @@ try:
     engine = ChatLertEngine()
 except Exception:
     LOAD_ERROR = traceback.format_exc()
+    print(LOAD_ERROR, flush=True)  # เห็นเฉพาะใน Vercel Logs
 
 
 class handler(BaseHTTPRequestHandler):
@@ -29,7 +30,7 @@ class handler(BaseHTTPRequestHandler):
 
     def do_GET(self):
         if LOAD_ERROR:
-            return self._send(500, {"ok": False, "load_error": LOAD_ERROR})
+            return self._send(500, {"ok": False, "error": "engine failed to load"})
         self._send(200, {"ok": True, "service": "chatlert"})
 
     def do_POST(self):
@@ -45,5 +46,6 @@ class handler(BaseHTTPRequestHandler):
             return self._send(400, {"error": "empty"})
         try:
             self._send(200, engine.process(text))
-        except Exception as e:
-            self._send(500, {"error": str(e)})
+        except Exception:
+            print(traceback.format_exc(), flush=True)
+            self._send(500, {"error": "internal error"})
